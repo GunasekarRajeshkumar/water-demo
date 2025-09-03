@@ -1,9 +1,16 @@
 import Razorpay from 'razorpay';
 
-const razorpay = new Razorpay({key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, key_secret: process.env.NEXT_PUBLIC_RAZORPAY_KEY_SECRET});
-
 export async function POST(request) {
     try {
+        let keyId = process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+        let keySecret = process.env.RAZORPAY_KEY_SECRET || process.env.NEXT_PUBLIC_RAZORPAY_KEY_SECRET;
+        if (!keyId || !keySecret) {
+            console.warn('Razorpay env vars missing; using local fallback test keys. Do not use in production.');
+            keyId = keyId || 'rzp_test_1234567890';
+            keySecret = keySecret || 'test_secret_1234567890';
+        }
+
+        const razorpay = new Razorpay({ key_id: keyId, key_secret: keySecret });
         const {items, userInfo, totalAmount} = await request.json();
 
         // Validate input

@@ -65,8 +65,12 @@ export const formatAmount = (amount) => { // Convert to paise (Razorpay expects 
 };
 
 export const getRazorpayOptions = (order, userInfo, onSuccess, onFailure) => {
+    const key = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_1234567890';
+    if (!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
+        console.warn('NEXT_PUBLIC_RAZORPAY_KEY_ID missing; using local fallback test key.');
+    }
     return {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        key,
         amount: formatAmount(order.amount),
         currency: 'INR',
         name: process.env.NEXT_PUBLIC_APP_NAME || 'Maglife',
